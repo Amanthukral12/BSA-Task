@@ -1,0 +1,129 @@
+openapi: 3.0.0
+info:
+    title: Emissions API
+    version: 1.0.0
+servers:
+    - url: http://localhost:8000/ghg-emissions/
+paths:
+    /signup:
+        post:
+            summary: Create a new user
+            description: Ceated a new user in database
+            requestBody:
+            description: The user to create
+            required: true
+            content:
+            application/json:
+                schema:
+                $ref: '#/models/user'
+            responses:
+                '200':
+                description: The created user
+                content:
+                    application/json:
+                    schema:
+                        $ref: '#/models/user'
+    
+    /signin:
+        post:
+            summary: Retrieve an existing user
+            description: Retrieved an existing user in database
+            requestBody:
+            description: The user to Retrieve
+            required: true
+            content:
+            application/json:
+                schema:
+                $ref: '#/models/user'
+            responses:
+                '200':
+                description: The Retrieved user
+                content:
+                    application/json:
+                    schema:
+                        $ref: '#/models/user'
+    /signout:
+        get:
+            summary: Signout an existing user
+            description: Signout an existing user 
+            requestBody:
+            description: Removes authentication from application
+            
+            responses:
+                '200':
+                description: Signout an existing user 
+                content:
+                application/json:
+                    schema:
+                        type: string
+                        items:
+                            $ref: '#/models/user'
+    
+    /:
+        post:
+            summary: Create a new entry for emissions
+            description: Created a new entry for emissions in database
+            requestBody:
+            description: Creates a new entry in the database
+            required: true
+            content:
+            application/json:
+                schema:
+                $ref: '#/models/countryDataModel'
+            responses:
+                '200':
+                description: The Created entry
+                content:
+                    application/json:
+                    schema:
+                        $ref: '#/models/countryDataModel'
+    
+    /country/?country={country_name}&start_year={start_year}&end_year={end_year}&parameter={parameter}:
+        get:
+            summary: Retrieve entries from the database with matching parameters
+            description: Retrieve entries from the database with matching parameters
+            requestBody:
+            description: Retrieves entries from the database with matching parameters
+            
+            responses:
+                '200':
+                description: Retrieves entries from the database with matching parameters
+                content:
+                application/json:
+                    schema:
+                        type: Array
+                        items:
+                            $ref: '#/models/countryDataModel'
+
+components:
+    schemas:
+        User:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: The name of the new user
+                email:
+                    type: string
+                    description: The email of the new user and unique identifier for the user
+                password:
+                    type: string
+                    description: The password of the new user
+        
+        CountryData:
+            type: object
+            properties:
+                country:
+                    type: string
+                    description: The name of the country for entry
+                year:
+                    type: string
+                    description: The year of the new entry 
+                value:
+                    type: Decimal
+                    format: Decimal128
+                    description: The value of the new entry
+                parameter:
+                    type: string
+                    format: ENUM
+                    description: The parameter of the new entry
